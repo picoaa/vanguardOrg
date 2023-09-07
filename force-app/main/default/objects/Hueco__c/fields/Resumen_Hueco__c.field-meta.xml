@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Resumen_Hueco__c</fullName>
+    <description>Vanguard</description>
+    <externalId>false</externalId>
+    <formula>CASE(
+MOD( Fecha__c - DATE( 1900, 1, 8 ), 7 ),
+0, &quot;Lunes&quot;,
+1, &quot;Martes&quot;,
+2, &quot;Miércoles&quot;,
+3, &quot;Jueves&quot;,
+4, &quot;Viernes&quot;,
+5, &quot;Sábado&quot;,
+&quot;Domingo&quot;
+)
+
+&amp; &quot; &quot; &amp; TEXT(DAY(Fecha__c)) &amp; &quot; de &quot; &amp; 
+
+CASE(MONTH(Fecha__c),
+1, &quot;Enero&quot;,
+2, &quot;Febrero&quot;,
+3, &quot;Marzo&quot;, 
+4, &quot;Abril&quot;, 
+5, &quot;Mayo&quot;, 
+6, &quot;Junio&quot;,
+7, &quot;Julio&quot;,
+8, &quot;Agosto&quot;,
+9, &quot;Septiembre&quot;,
+10, &quot;Octubre&quot;,
+11, &quot;Noviembre&quot;,
+12, &quot;Diciembre&quot;,
+&quot;Ninguno&quot;) 
+
+ &amp; &quot;, de &quot; &amp; TRIM(LEFT(TEXT(Hora_de_inicio__c), 5)) &amp; &quot; a &quot; &amp; TRIM(LEFT(TEXT(Hora_fin__c), 5)) &amp; &quot; h&quot;</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Resumen Hueco</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
