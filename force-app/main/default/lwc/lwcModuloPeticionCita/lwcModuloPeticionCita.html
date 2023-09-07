@@ -1,0 +1,162 @@
+<template>
+    <lightning-card title="Petición de Cita Médica" icon-name="standard:work_plan" class="slds-is-static">
+        <lightning-progress-indicator class="slds-var-m-around_small" current-step={currentStep} type="base" variant="base">
+            <lightning-progress-step label="Paso 1" value="1" onclick={handleOnStepClick}></lightning-progress-step>
+            <lightning-progress-step label="Paso 2" value="2" onclick={handleOnStepClick}></lightning-progress-step>
+            <lightning-progress-step label="Paso 3" value="3" onclick={handleOnStepClick}></lightning-progress-step>
+            <lightning-progress-step label="Paso 4" value="4" onclick={handleOnStepClick}></lightning-progress-step>
+        </lightning-progress-indicator>
+        <div if:true={showSpinner} class="slds-is-relative">
+            <lightning-spinner
+                alternative-text="Cargando datos..." variant="brand">
+            </lightning-spinner>
+        </div>
+        <template if:true={isStepOne}>
+            <div class="slds-var-m-around_medium">
+                <b>Paso 1 de 4 (Información de la Cita)</b>
+            </div>
+            <div class="slds-var-m-around_medium">
+                <lightning-combobox
+                    name="centro"
+                    label="Centro"
+                    value={centroValue}
+                    placeholder="Selecciona un centro médico"
+                    options={centroOptions}
+                    onchange={handleChangeCentro}>
+                </lightning-combobox>
+                <lightning-combobox
+                    name="especialidad"
+                    label="Especialidad"
+                    value={especialidadValue}
+                    placeholder="Selecciona una especialidad"
+                    options={especialidadOptions}
+                    onchange={handleChangeEspecialidad}
+                    disabled={espDisabled}>
+                </lightning-combobox>
+                <lightning-input 
+                    type="date" 
+                    name="fechaCita" 
+                    label="Selecciona una fecha" 
+                    date-style="long"
+                    min={minDate}
+                    max={maxDate}
+                    value={fechaValue} 
+                    onchange={handleChangeFecha}
+                    disabled={disDisabled}>
+                </lightning-input>
+                <template if:true={error}>
+                    <div class="slds-var-m-around_medium" id="errorDiv">
+                        <p>Por favor refresca la página (F5) y vuélvelo a intentar. Error: {error}</p>
+                    </div>
+                </template>
+            </div>
+        </template>
+        <template if:true={isStepTwo}>
+            <div class="slds-var-m-around_medium">
+                <b>Paso 2 de 4 (Huecos Disponibles)</b>
+            </div>
+            <div class="slds-var-m-around_medium">
+                <lightning-combobox
+                    name="huecos"
+                    label="Huecos Disponibles"
+                    value={huecoValue}
+                    placeholder="Selecciona un hueco"
+                    options={hueOptions}
+                    onchange={handleChangeHueco}>
+                </lightning-combobox>
+            </div>
+        </template>
+        <template if:true={isStepThree}>
+            <div class="slds-var-m-around_medium">
+                <b>Paso 3 de 4 (Información de Contacto)</b>
+            </div>
+            <div class="slds-var-m-around_medium">
+                <lightning-input 
+                    type="text" 
+                    label="Nombre"
+                    placeholder="Introduce tu nombre" 
+                    value={firstNameValue} 
+                    onchange={handleChangeName}
+                    maxlength="64">
+                </lightning-input>
+                <lightning-input 
+                    type="text" 
+                    label="Apellidos"
+                    placeholder="Introduce tus apellidos" 
+                    value={lastNameValue} 
+                    onchange={handleChangeLastName}
+                    maxlength="128">
+                </lightning-input>
+                <lightning-input 
+                    type="email" 
+                    label="Email"
+                    placeholder="Introduce tu correo electrónico" 
+                    value={emailValue}
+                    onchange={handleChangeEmail}
+                    maxlength="128">
+                </lightning-input>
+                <lightning-input 
+                    type="phone" 
+                    label="Teléfono de Contacto"
+                    placeholder="Introduce tu número de teléfono"
+                    value={phoneValue}
+                    onchange={handleChangePhone}
+                    maxlength="12">
+                </lightning-input>
+                <lightning-textarea 
+                    type="text"
+                    label="Observaciones"
+                    value={commentsValue}
+                    onchange={handleChangeComments}
+                    maxlength="512"
+                >
+                </lightning-textarea>
+            </div>
+        </template>
+        <template if:true={isStepFour}>
+            <div class="slds-var-m-around_medium">
+                <b>Paso 4 de 4 (Resumen)</b>
+            </div>
+            <div class="slds-var-m-around_medium">
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-2 slds-var-m-right_xx-small">
+                        <div class="slds-var-m-vertical_small">
+                            <p><b>Información de la Cita:</b></p>
+                        </div>
+                        <p class="slds-var-m-bottom_xxx-small">Fecha: <lightning-formatted-text value={hueName}> </lightning-formatted-text></p>
+                        <p class="slds-var-m-bottom_xxx-small">Centro: <lightning-formatted-text value={cenName}> </lightning-formatted-text></p>
+                        <p class="slds-var-m-bottom_xxx-small">Especialidad: <lightning-formatted-text value={espName}> </lightning-formatted-text></p>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <div class="slds-var-m-vertical_small">
+                            <p><b>Información del Paciente:</b></p>
+                        </div>
+                        <p class="slds-var-m-bottom_xxx-small">Nombre y Apellidos: <lightning-formatted-name first-name={firstNameValue} last-name={lastNameValue}> </lightning-formatted-name></p>
+                        <p class="slds-var-m-bottom_xxx-small slds-hyphenate">Correo Electrónico: <lightning-formatted-email value={emailValue}> </lightning-formatted-email></p>
+                        <p class="slds-var-m-bottom_xxx-small">Teléfono de Contacto: <lightning-formatted-phone value={phoneValue}> </lightning-formatted-phone></p>
+                        <p class="slds-var-m-bottom_xxx-small slds-hyphenate">Observaciones: <lightning-formatted-text value={commentsValue}> </lightning-formatted-text></p>
+                    </div>
+                </div>
+                <div if:true={showSpinnerSubmit} class="slds-is-relative">
+                    <lightning-spinner
+                        alternative-text="Estamos creando tu cita..." variant="brand">
+                    </lightning-spinner>
+                </div>
+            </div>
+            <div class="slds-var-m-around_large">
+                <p></p>
+            </div>
+        </template>
+        <div class="slds-text-align_right">
+            <template if:true={isEnablePrev}>
+                <lightning-button class="slds-var-m-around_large" label="Anterior" variant="base" onclick={handlePrev} disabled={backDisabled}></lightning-button>
+            </template>
+            <template if:true={isEnableNext}>
+                <lightning-button class="slds-var-m-around_large" label="Siguiente" variant="brand" onclick={handleNext} disabled={nextDisabled}></lightning-button>
+            </template>
+            <template if:true={isEnableFinish}>
+                <lightning-button class="slds-var-m-around_large" label="Pedir Cita" variant="brand" onclick={handleSubmit} disabled={submitDisabled}></lightning-button>
+            </template>
+        </div>
+    </lightning-card>
+</template>
